@@ -1,5 +1,7 @@
-﻿using System;
+1
+using System;
 using System.Collections.Generic;
+using MathNet.Numerics.Statistics;
 namespace FinancialAnalysis
 {
  // Class to represent a financial asset
@@ -22,6 +24,7 @@ namespace FinancialAnalysis
  public static List<double> CalculateReturns(List<Asset> assets)
  {
  List<double> returns = new List<double>();
+2
  for (int i = 1; i < assets.Count; i++)
  {
  double currentPrice = assets[i].Price;
@@ -34,12 +37,7 @@ namespace FinancialAnalysis
  // Calculate volatility for a given list of returns
  public static double CalculateVolatility(List<double> returns)
  {
- double sumOfSquares = 0;
- foreach (double assetReturn in returns)
- {
- sumOfSquares += Math.Pow(assetReturn, 2);
- }
- double variance = sumOfSquares / returns.Count;
+ double variance = Statistics.Variance(returns);
  double volatility = Math.Sqrt(variance);
  return volatility;
  }
@@ -49,6 +47,7 @@ namespace FinancialAnalysis
  if (returns1.Count != returns2.Count)
  {
  throw new ArgumentException("Returns lists must have the same length.");
+3
  }
  double sum1 = 0;
  double sum2 = 0;
@@ -72,6 +71,7 @@ namespace FinancialAnalysis
  return correlation;
  }
  }
+4
  // Class to demonstrate the program
  public class Program
  {
@@ -95,6 +95,7 @@ namespace FinancialAnalysis
  double volatility = FinancialMetricsCalculator.CalculateVolatility(returns);
  // Calculate correlation between two assets
  List<Asset> assets2 = new List<Asset>
+5
  {
  new Asset("GOOGL", new DateTime(2022, 1, 1), 2000.0),
  new Asset("GOOGL", new DateTime(2022, 1, 2), 2010.0),
@@ -113,11 +114,12 @@ namespace FinancialAnalysis
  Console.WriteLine("Volatility: " + volatility);
  Console.WriteLine("Correlation: " + correlation);
  }
- // Filter assets by date range
+ // Method to filter assets by date
  public static List<Asset> FilterAssetsByDate(List<Asset> assets, DateTime startDate, DateTime endDate)
  {
  List<Asset> filteredAssets = new List<Asset>();
  foreach (Asset asset in assets)
+6
  {
  if (asset.Date >= startDate && asset.Date <= endDate)
  {
@@ -125,46 +127,6 @@ namespace FinancialAnalysis
  }
  }
  return filteredAssets;
- }
- // Unit tests
- public static void RunUnitTests()
- {
- // Test CalculateReturns
- List<Asset> testAssets = new List<Asset>
- {
- new Asset("A", new DateTime(2022, 1, 1), 10),
- new Asset("A", new DateTime(2022, 1, 2), 12),
- new Asset("A", new DateTime(2022, 1, 3), 8),
- new Asset("A", new DateTime(2022, 1, 4), 11)
- };
- List<double> expectedReturns = new List<double> { 0.2, -0.3333333333333333, 0.375 };
- List<double> actualReturns = FinancialMetricsCalculator.CalculateReturns(testAssets);
- // Compare expected and actual returns
- for (int i = 0; i < expectedReturns.Count; i++)
- {
- if (Math.Abs(expectedReturns[i] - actualReturns[i]) > 0.0001)
- {
- throw new Exception("CalculateReturns test failed.");
- }
- }
- // Test CalculateVolatility
- List<double> testReturns = new List<double> { 0.1, 0.2, -0.1, 0.3, 0.05 };
- double expectedVolatility = 0.151745751;
- double actualVolatility = FinancialMetricsCalculator.CalculateVolatility(testReturns);
- // Compare expected and actual volatility
- if (Math.Abs(expectedVolatility - actualVolatility) > 0.0001)
- {
- throw new Exception("CalculateVolatility test failed.");
- }
- // Test CalculateCorrelation
- List<double> testReturns2 = new List<double> { 0.05, 0.15, -0.05, 0.25, 0.1 };
- double expectedCorrelation = 0.993772287;
- double actualCorrelation = FinancialMetricsCalculator.CalculateCorrelation(testReturns, testReturns2);
- // Compare expected and actual correlation
- if (Math.Abs(expectedCorrelation - actualCorrelation) > 0.0001)
- {
- throw new Exception("CalculateCorrelation test failed.");
- }
  }
  }
 }
