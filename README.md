@@ -6,5 +6,5 @@ System.Collections.Generic
 MathNet.Numerics.Statistics;
 
 Start the application:
-You should expect the following output:
+You should expect the following Output:
 
